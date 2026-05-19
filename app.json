@@ -1,5 +1,6 @@
 {
   "expo": {
+<<<<<<< HEAD
     "name": "tauros-barberia-clean",
     "slug": "tauros-barberia-clean",
     "version": "1.0.0",
@@ -12,11 +13,22 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+=======
+    "name": "tauros-barberia",
+    "slug": "tauros-barberia",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+>>>>>>> 706f84bca8998cbb49a8bab76d9ce21493a7a919
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
+<<<<<<< HEAD
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
@@ -30,3 +42,11 @@
     ]
   }
 }
+=======
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "web": {}
+  }
+}
+>>>>>>> 706f84bca8998cbb49a8bab76d9ce21493a7a919

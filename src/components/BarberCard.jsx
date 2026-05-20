@@ -3,17 +3,20 @@ import {
   View,
   Text,
   StyleSheet,
+  TouchableOpacity,
 } from "react-native";
-
-import CustomButton from "./CustomButton";
 
 export default function BarberCard({
   name,
   specialty,
   onPress,
 }) {
+
   return (
-    <View style={styles.card}>
+    <TouchableOpacity
+      style={styles.card}
+      onPress={onPress}
+    >
 
       <Text style={styles.name}>
         {name}
@@ -23,33 +26,28 @@ export default function BarberCard({
         {specialty}
       </Text>
 
-      <CustomButton
-        title="Reservar"
-        onPress={onPress}
-      />
-
-    </View>
+    </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
   card: {
     width: "100%",
-    backgroundColor: "#24243E",
+    backgroundColor: "#2A2A40",
     padding: 20,
     borderRadius: 16,
     marginTop: 20,
   },
 
   name: {
-    color: "#C8962A",
-    fontSize: 22,
+    color: "#FFFFFF",
+    fontSize: 20,
     fontWeight: "bold",
   },
 
   specialty: {
-    color: "#FFFFFF",
-    fontSize: 16,
+    color: "#CFCFCF",
     marginTop: 8,
+    fontSize: 16,
   },
 });

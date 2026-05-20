@@ -1,6 +1,6 @@
 import React from "react";
+import useBarbers from "../../hooks/useBarbers";
 import {
-  View,
   Text,
   StyleSheet,
   ScrollView,
@@ -11,9 +11,13 @@ import BarberCard from "../../components/BarberCard";
 
 export default function HomeScreen({ navigation }) {
 
-  const handleBooking = () => {
-    navigation.navigate("BarberDetail");
-  };
+  const { barbers } = useBarbers();
+
+  const handleBooking = (barber) => {
+  navigation.navigate("BarberDetail", {
+    barber,
+  });
+};
 
   return (
     <ScrollView
@@ -29,22 +33,14 @@ export default function HomeScreen({ navigation }) {
         Reserva tu cita fácilmente
       </Text>
 
-      <CustomButton
-        title="Reservar Ahora"
-        onPress={handleBooking}
-      />
-
-      <BarberCard
-        name="Carlos Rodríguez"
-        specialty="Fade y cortes clásicos"
-        onPress={handleBooking}
-      />
-
-      <BarberCard
-        name="Miguel Herrera"
-        specialty="Barbas y estilos modernos"
-        onPress={handleBooking}
-      />
+      {barbers.map((barber) => (
+        <BarberCard
+          key={barber.id}
+          name={barber.name}
+          specialty={barber.specialty}
+          onPress={() => handleBooking(barber)}
+        />
+      ))}
 
     </ScrollView>
   );

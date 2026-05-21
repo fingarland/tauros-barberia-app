@@ -1,13 +1,23 @@
 import React from "react";
+import CustomButton from "../../components/CustomButton";
 import {
   View,
   Text,
   StyleSheet,
 } from "react-native";
 
-export default function BarberDetailScreen({ route }) {
+export default function BarberDetailScreen({
+  route,
+  navigation,
+}) {
 
   const { barber } = route.params;
+
+  const handleTimeSlots = () => {
+    navigation.navigate("TimeSlot", {
+      barber,
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -23,6 +33,11 @@ export default function BarberDetailScreen({ route }) {
       <Text style={styles.chair}>
         Silla #{barber.chair_number}
       </Text>
+
+      <CustomButton
+        title="Ver Horarios"
+        onPress={handleTimeSlots}
+      />
 
     </View>
   );

@@ -7,6 +7,8 @@ import {
   View,
   Text,
   StyleSheet,
+  ScrollView,
+  TouchableOpacity,
 } from "react-native";
 
 import { supabase } from "../../services/supabase";
@@ -23,6 +25,9 @@ export default function TimeSlotScreen({
   const [availableSlots, setAvailableSlots] =
     useState([]);
 
+  const [selectedDate, setSelectedDate] =
+    useState(new Date());
+
   const allTimeSlots = [
     "9:00 AM",
     "9:30 AM",
@@ -37,22 +42,46 @@ export default function TimeSlotScreen({
     "4:00 PM",
   ];
 
+  const nextDays = [...Array(8)].map(
+    (_, index) => {
+
+      const date = new Date();
+
+      date.setDate(
+        date.getDate() + index
+      );
+
+      return date;
+    }
+  );
+
   useEffect(() => {
     fetchAvailableSlots();
-  }, []);
+  }, [selectedDate]);
 
   const fetchAvailableSlots = async () => {
+
+    const formattedDate =
+      selectedDate
+        .toISOString()
+        .split("T")[0];
 
     const { data, error } = await supabase
       .from("appointments")
       .select("appointment_time")
-      .eq("barber_id", barber.id);
+      .eq("barber_id", barber.id)
+      .eq(
+        "appointment_date",
+        formattedDate
+      );
 
     if (error) {
+
       console.log(
         "Error obteniendo reservas:",
         error
       );
+
       return;
     }
 
@@ -76,18 +105,86 @@ export default function TimeSlotScreen({
     navigation.navigate("Booking", {
       barber,
       time,
+      appointmentDate:
+        selectedDate
+          .toISOString()
+          .split("T")[0],
     });
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={
+        styles.content
+      }
+    >
 
       <Text style={styles.title}>
         Horarios de {barber.name}
       </Text>
 
       <Text style={styles.subtitle}>
-        Selecciona una hora disponible
+        Selecciona un día
+      </Text>
+
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={
+          false
+        }
+        style={styles.daysContainer}
+      >
+
+        {nextDays.map((date) => {
+
+          const formatted =
+            date
+              .toISOString()
+              .split("T")[0];
+
+          const selected =
+            formatted ===
+            selectedDate
+              .toISOString()
+              .split("T")[0];
+
+          return (
+            <TouchableOpacity
+              key={formatted}
+              style={[
+                styles.dayButton,
+
+                selected &&
+                  styles.selectedDay,
+              ]}
+              onPress={() =>
+                setSelectedDate(date)
+              }
+            >
+
+              <Text
+                style={[
+                  styles.dayText,
+
+                  selected &&
+                    styles.selectedDayText,
+                ]}
+              >
+                {
+                  date
+                    .toLocaleDateString()
+                }
+              </Text>
+
+            </TouchableOpacity>
+          );
+        })}
+
+      </ScrollView>
+
+      <Text style={styles.subtitle}>
+        Horarios disponibles
       </Text>
 
       {availableSlots.map((time) => (
@@ -100,7 +197,7 @@ export default function TimeSlotScreen({
         />
       ))}
 
-    </View>
+    </ScrollView>
   );
 }
 
@@ -108,9 +205,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#1A1A2E",
-    justifyContent: "center",
+  },
+
+  content: {
+    paddingTop: 40,
     alignItems: "center",
     paddingHorizontal: 20,
+    paddingBottom: 40,
   },
 
   title: {
@@ -123,8 +224,33 @@ const styles = StyleSheet.create({
   subtitle: {
     color: "#FFFFFF",
     fontSize: 18,
-    marginTop: 15,
-    marginBottom: 20,
+    marginTop: 20,
+    marginBottom: 15,
     textAlign: "center",
+  },
+
+  daysContainer: {
+    maxHeight: 60,
+  },
+
+  dayButton: {
+    backgroundColor: "#2A2A40",
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 10,
+    marginRight: 10,
+  },
+
+  selectedDay: {
+    backgroundColor: "#C8962A",
+  },
+
+  dayText: {
+    color: "#FFFFFF",
+    fontWeight: "bold",
+  },
+
+  selectedDayText: {
+    color: "#1A1A2E",
   },
 });

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { supabase } from "../../services/supabase";
+
 import {
   View,
   Text,
@@ -14,13 +15,20 @@ export default function BookingScreen({
   navigation,
 }) {
 
-  const { barber, time } = route.params;
+  const {
+    barber,
+    time,
+    appointmentDate,
+  } = route.params;
 
   const [customerName, setCustomerName] =
     useState("");
 
   const [phone, setPhone] =
     useState("");
+
+  const formattedDate =
+    appointmentDate || "Sin fecha";
 
   const handleConfirmBooking = async () => {
 
@@ -38,10 +46,12 @@ export default function BookingScreen({
           barber_id: barber.id,
           barber_name: barber.name,
           appointment_time: time,
+          appointment_date: formattedDate,
         },
       ]);
 
     if (error) {
+
       console.log(
         "Error guardando cita:",
         error
@@ -75,6 +85,14 @@ export default function BookingScreen({
 
       <Text style={styles.value}>
         {time}
+      </Text>
+
+      <Text style={styles.info}>
+        Fecha:
+      </Text>
+
+      <Text style={styles.value}>
+        {formattedDate}
       </Text>
 
       <TextInput

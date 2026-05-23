@@ -53,6 +53,7 @@ export default function AppNavigator() {
           name="Confirmation"
           component={ConfirmationScreen}
         />
+        
 
         {/* Admin */}
         <Stack.Screen

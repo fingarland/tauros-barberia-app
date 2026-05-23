@@ -14,12 +14,8 @@ export default function BookingScreen({
   route,
   navigation,
 }) {
-
-  const {
-    barber,
-    time,
-    appointmentDate,
-  } = route.params;
+  const { barber, time, appointmentDate } =
+    route.params;
 
   const [customerName, setCustomerName] =
     useState("");
@@ -31,9 +27,19 @@ export default function BookingScreen({
     appointmentDate || "Sin fecha";
 
   const handleConfirmBooking = async () => {
-
+    // Validaciones extra
     if (!customerName || !phone) {
       alert("Completa todos los campos");
+      return;
+    }
+
+    if (customerName.trim().length < 3) {
+      alert("El nombre debe tener mínimo 3 letras");
+      return;
+    }
+
+    if (phone.length !== 10) {
+      alert("El teléfono debe tener 10 dígitos");
       return;
     }
 
@@ -51,12 +57,10 @@ export default function BookingScreen({
       ]);
 
     if (error) {
-
       console.log(
         "Error guardando cita:",
         error
       );
-
       alert("Error al guardar la reserva");
       return;
     }
@@ -66,7 +70,6 @@ export default function BookingScreen({
 
   return (
     <View style={styles.container}>
-
       <Text style={styles.title}>
         Confirmar Reserva
       </Text>
@@ -74,26 +77,13 @@ export default function BookingScreen({
       <Text style={styles.info}>
         Barbero:
       </Text>
+      <Text style={styles.value}>{barber.name}</Text>
 
-      <Text style={styles.value}>
-        {barber.name}
-      </Text>
+      <Text style={styles.info}>Hora:</Text>
+      <Text style={styles.value}>{time}</Text>
 
-      <Text style={styles.info}>
-        Hora:
-      </Text>
-
-      <Text style={styles.value}>
-        {time}
-      </Text>
-
-      <Text style={styles.info}>
-        Fecha:
-      </Text>
-
-      <Text style={styles.value}>
-        {formattedDate}
-      </Text>
+      <Text style={styles.info}>Fecha:</Text>
+      <Text style={styles.value}>{formattedDate}</Text>
 
       <TextInput
         style={styles.input}
@@ -101,13 +91,11 @@ export default function BookingScreen({
         placeholderTextColor="#999"
         value={customerName}
         onChangeText={(text) => {
-
           const onlyLetters =
             text.replace(
               /[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g,
               ""
             );
-
           setCustomerName(onlyLetters);
         }}
       />
@@ -119,10 +107,10 @@ export default function BookingScreen({
         keyboardType="phone-pad"
         value={phone}
         onChangeText={(text) => {
-
-          const onlyNumbers =
-            text.replace(/[^0-9]/g, "");
-
+          const onlyNumbers = text.replace(
+            /[^0-9]/g,
+            ""
+          );
           setPhone(onlyNumbers);
         }}
       />
@@ -131,7 +119,6 @@ export default function BookingScreen({
         title="Confirmar Reserva"
         onPress={handleConfirmBooking}
       />
-
     </View>
   );
 }
@@ -144,27 +131,23 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 20,
   },
-
   title: {
     color: "#C8962A",
     fontSize: 30,
     fontWeight: "bold",
     marginBottom: 30,
   },
-
   info: {
     color: "#FFFFFF",
     fontSize: 18,
     marginTop: 10,
   },
-
   value: {
     color: "#C8962A",
     fontSize: 22,
     fontWeight: "bold",
     marginTop: 5,
   },
-
   input: {
     width: "100%",
     backgroundColor: "#2A2A40",

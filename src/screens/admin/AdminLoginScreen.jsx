@@ -30,7 +30,7 @@ export default function AdminLoginScreen({
     ) {
 
       navigation.navigate(
-        "AdminPanel"
+        "AdminDashboard"
       );
 
     } else {

@@ -1,25 +1,51 @@
-import { useEffect, useState } from "react";
-import { supabase } from "../services/supabase";
+import {
+  useEffect,
+  useState,
+} from "react";
 
-export default function useBarbers() {
+import { supabase }
+  from "../services/supabase";
 
-  const [barbers, setBarbers] = useState([]);
+export default function
+useBarbers() {
+
+  const [barbers,
+    setBarbers] =
+      useState([]);
 
   useEffect(() => {
     fetchBarbers();
   }, []);
 
-  const fetchBarbers = async () => {
+  const fetchBarbers =
+    async () => {
 
-    const { data, error } = await supabase
+    const {
+      data,
+      error,
+    } = await supabase
       .from("barbers")
-      .select("*");
+      .select("*")
+      .eq(
+        "is_active",
+        true
+      );
 
     if (error) {
-      console.log("Error obteniendo barberos:", error);
+
+      console.log(
+        "Error obteniendo barberos:",
+        error
+      );
+
       return;
     }
-    console.log("BARBERS:", data);
+
+    console.log(
+      "BARBERS:",
+      data
+    );
+
     setBarbers(data);
   };
 

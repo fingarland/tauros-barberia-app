@@ -1,28 +1,43 @@
 import React from "react";
 import useBarbers from "../../hooks/useBarbers";
+
 import {
   Text,
   StyleSheet,
   ScrollView,
 } from "react-native";
 
-import CustomButton from "../../components/CustomButton";
-import BarberCard from "../../components/BarberCard";
+import CustomButton
+  from "../../components/CustomButton";
 
-export default function HomeScreen({ navigation }) {
+import BarberCard
+  from "../../components/BarberCard";
 
-  const { barbers } = useBarbers();
+export default function HomeScreen({
+  navigation,
+}) {
 
-  const handleBooking = (barber) => {
-  navigation.navigate("BarberDetail", {
-    barber,
-  });
-};
+  const { barbers } =
+    useBarbers();
+
+  const handleBooking = (
+    barber
+  ) => {
+
+    navigation.navigate(
+      "BarberDetail",
+      {
+        barber,
+      }
+    );
+  };
 
   return (
     <ScrollView
       style={styles.container}
-      contentContainerStyle={styles.content}
+      contentContainerStyle={
+        styles.content
+      }
     >
 
       <Text style={styles.title}>
@@ -33,13 +48,28 @@ export default function HomeScreen({ navigation }) {
         Reserva tu cita fácilmente
       </Text>
 
+      <CustomButton
+        title="Admin"
+        onPress={() =>
+          navigation.navigate(
+            "AdminLogin"
+          )
+        }
+      />
+
       {barbers.map((barber) => (
+
         <BarberCard
           key={barber.id}
           name={barber.name}
-          specialty={barber.specialty}
-          onPress={() => handleBooking(barber)}
+          specialty={
+            barber.specialty
+          }
+          onPress={() =>
+            handleBooking(barber)
+          }
         />
+
       ))}
 
     </ScrollView>
@@ -47,6 +77,7 @@ export default function HomeScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+
   container: {
     flex: 1,
     backgroundColor: "#1A1A2E",
@@ -69,6 +100,8 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontSize: 18,
     marginTop: 12,
+    marginBottom: 20,
     textAlign: "center",
   },
+
 });

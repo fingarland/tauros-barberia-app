@@ -17,8 +17,19 @@ import { supabase }
 import CustomButton
   from "../../components/CustomButton";
 
+import useAdminTimeout
+  from "../../hooks/useAdminTimeout";
+
 export default function
-AdminBarbersScreen() {
+AdminBarbersScreen({
+  navigation,
+}) {
+
+  const {
+    resetTimer,
+  } = useAdminTimeout(
+    navigation
+  );
 
   const [barbers, setBarbers] =
     useState([]);
@@ -234,6 +245,10 @@ AdminBarbersScreen() {
       style={styles.container}
       contentContainerStyle={
         styles.content
+      }
+
+      onTouchStart={
+        resetTimer
       }
     >
 

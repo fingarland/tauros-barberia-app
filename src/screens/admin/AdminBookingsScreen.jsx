@@ -16,8 +16,19 @@ import { supabase }
 import CustomButton
   from "../../components/CustomButton";
 
+import useAdminTimeout
+  from "../../hooks/useAdminTimeout";
+
 export default function
-AdminBookingsScreen() {
+AdminBookingsScreen({
+  navigation,
+}) {
+
+  const {
+    resetTimer,
+  } = useAdminTimeout(
+    navigation
+  );
 
   const [appointments, setAppointments] =
     useState([]);
@@ -104,7 +115,12 @@ AdminBookingsScreen() {
   ) {
 
     return (
-      <View style={styles.container}>
+      <View
+        style={styles.container}
+        onTouchStart={
+          resetTimer
+        }
+      >
 
         <Text style={styles.title}>
           No hay reservas todavía
@@ -119,6 +135,10 @@ AdminBookingsScreen() {
       style={styles.container}
       contentContainerStyle={
         styles.content
+      }
+
+      onTouchStart={
+        resetTimer
       }
     >
 

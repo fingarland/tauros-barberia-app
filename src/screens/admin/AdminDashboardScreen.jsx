@@ -9,13 +9,28 @@ import {
 import CustomButton
   from "../../components/CustomButton";
 
+import useAdminTimeout
+  from "../../hooks/useAdminTimeout";
+
 export default function
 AdminDashboardScreen({
   navigation,
 }) {
 
+  const {
+    resetTimer,
+  } = useAdminTimeout(
+    navigation
+  );
+
   return (
-    <View style={styles.container}>
+
+    <View
+      style={styles.container}
+      onTouchStart={
+        resetTimer
+      }
+    >
 
       <Text style={styles.title}>
         Panel Administrador
@@ -58,6 +73,7 @@ AdminDashboardScreen({
       />
 
     </View>
+
   );
 }
 

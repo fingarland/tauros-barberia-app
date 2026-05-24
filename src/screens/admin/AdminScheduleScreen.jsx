@@ -17,8 +17,19 @@ import { supabase }
 import CustomButton
   from "../../components/CustomButton";
 
+import useAdminTimeout
+  from "../../hooks/useAdminTimeout";
+
 export default function
-AdminScheduleScreen() {
+AdminScheduleScreen({
+  navigation,
+}) {
+
+  const {
+    resetTimer,
+  } = useAdminTimeout(
+    navigation
+  );
 
   const [barbers, setBarbers] =
     useState([]);
@@ -53,6 +64,43 @@ AdminScheduleScreen() {
 
   const handleSave =
     async (barber) => {
+
+    // validar horas
+    if (
+      barber.start_hour < 0 ||
+      barber.start_hour > 23
+    ) {
+
+      alert(
+        "La hora inicio debe ser entre 0 y 23"
+      );
+
+      return;
+    }
+
+    if (
+      barber.end_hour < 0 ||
+      barber.end_hour > 23
+    ) {
+
+      alert(
+        "La hora fin debe ser entre 0 y 23"
+      );
+
+      return;
+    }
+
+    if (
+      barber.end_hour <=
+      barber.start_hour
+    ) {
+
+      alert(
+        "La hora fin debe ser mayor que la hora inicio"
+      );
+
+      return;
+    }
 
     const { error } =
       await supabase
@@ -113,6 +161,10 @@ AdminScheduleScreen() {
       style={styles.container}
       contentContainerStyle={
         styles.content
+      }
+
+      onTouchStart={
+        resetTimer
       }
     >
 

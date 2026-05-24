@@ -134,11 +134,74 @@ TimeSlotScreen({
             .appointment_time
       );
 
+    // hora actual
+    const now =
+      new Date();
+
+    const isToday =
+      selectedDate
+        .toISOString()
+        .split("T")[0] ===
+      now
+        .toISOString()
+        .split("T")[0];
+
+    const currentHour =
+      now.getHours();
+
+    const currentMinute =
+      now.getMinutes();
+
     const filteredSlots =
       allTimeSlots.filter(
-        (slot) =>
-          !bookedSlots
-            .includes(slot)
+        (slot) => {
+
+          // eliminar reservadas
+          if (
+            bookedSlots.includes(
+              slot
+            )
+          ) {
+
+            return false;
+          }
+
+          // si no es hoy
+          if (!isToday) {
+
+            return true;
+          }
+
+          // separar hora y minutos
+          const [
+            slotHour,
+            slotMinute,
+          ] = slot
+            .split(":")
+            .map(Number);
+
+          // bloquear horas pasadas
+          if (
+            slotHour <
+            currentHour
+          ) {
+
+            return false;
+          }
+
+          // bloquear minutos pasados
+          if (
+            slotHour ===
+              currentHour &&
+            slotMinute <=
+              currentMinute
+          ) {
+
+            return false;
+          }
+
+          return true;
+        }
       );
 
     setAvailableSlots(

@@ -6,7 +6,7 @@ import React, {
 import {
   View,
   Text,
-  StyleSheet,
+ StyleSheet,
   TextInput,
   ScrollView,
 } from "react-native";
@@ -75,6 +75,8 @@ AdminBarbersScreen({
 
   const handleAddBarber =
     async () => {
+
+    resetTimer();
 
     if (
       !name ||
@@ -161,7 +163,9 @@ AdminBarbersScreen({
   const handleDeleteBarber =
     async (id) => {
 
-    // verificar reservas pendientes
+    resetTimer();
+
+    // verificar reservas activas
     const {
       data: appointments,
       error: appointmentsError,
@@ -169,9 +173,8 @@ AdminBarbersScreen({
       .from("appointments")
       .select("*")
       .eq("barber_id", id)
-      .or(
-        "status.eq.pending,status.is.null"
-      );
+      .neq("status", "completed")
+      .neq("status", "cancelled");
 
     if (appointmentsError) {
 
@@ -182,7 +185,7 @@ AdminBarbersScreen({
       return;
     }
 
-    // si tiene reservas pendientes
+    // bloquear eliminación
     if (
       appointments.length > 0
     ) {
@@ -219,6 +222,45 @@ AdminBarbersScreen({
       currentStatus
     ) => {
 
+    resetTimer();
+
+    // si se quiere desactivar
+    if (currentStatus) {
+
+      // verificar reservas activas
+      const {
+        data: appointments,
+        error: appointmentsError,
+      } = await supabase
+        .from("appointments")
+        .select("*")
+        .eq("barber_id", id)
+        .neq("status", "completed")
+        .neq("status", "cancelled");
+
+      if (appointmentsError) {
+
+        alert(
+          "Error verificando reservas"
+        );
+
+        return;
+      }
+
+      // bloquear desactivación
+      if (
+        appointments.length > 0
+      ) {
+
+        alert(
+          "No puedes desactivar este barbero porque tiene reservas pendientes"
+        );
+
+        return;
+      }
+    }
+
+    // activar o desactivar
     const { error } =
       await supabase
         .from("barbers")
@@ -247,9 +289,12 @@ AdminBarbersScreen({
         styles.content
       }
 
-      onTouchStart={
-        resetTimer
-      }
+      onStartShouldSetResponder={() => {
+
+        resetTimer();
+
+        return false;
+      }}
     >
 
       <Text style={styles.title}>
@@ -321,7 +366,15 @@ AdminBarbersScreen({
         placeholder="Nombre"
         placeholderTextColor="#999"
         value={name}
-        onChangeText={setName}
+
+        onChangeText={(text) => {
+
+          resetTimer();
+
+          setName(text);
+
+        }}
+
         style={styles.input}
       />
 
@@ -329,9 +382,15 @@ AdminBarbersScreen({
         placeholder="Especialidad"
         placeholderTextColor="#999"
         value={specialty}
-        onChangeText={
-          setSpecialty
-        }
+
+        onChangeText={(text) => {
+
+          resetTimer();
+
+          setSpecialty(text);
+
+        }}
+
         style={styles.input}
       />
 
@@ -339,9 +398,15 @@ AdminBarbersScreen({
         placeholder="Número de silla"
         placeholderTextColor="#999"
         value={chairNumber}
-        onChangeText={
-          setChairNumber
-        }
+
+        onChangeText={(text) => {
+
+          resetTimer();
+
+          setChairNumber(text);
+
+        }}
+
         keyboardType="number-pad"
         style={styles.input}
       />

@@ -72,6 +72,8 @@ AdminBookingsScreen({
   const handleCancel =
     async (id) => {
 
+    resetTimer();
+
     const { error } =
       await supabase
         .from("appointments")
@@ -94,6 +96,8 @@ AdminBookingsScreen({
 
   const handleComplete =
     async (id) => {
+
+    resetTimer();
 
     const { error } =
       await supabase
@@ -181,9 +185,13 @@ AdminBookingsScreen({
     return (
       <View
         style={styles.container}
-        onTouchStart={
-          resetTimer
-        }
+
+        onStartShouldSetResponder={() => {
+
+          resetTimer();
+
+          return false;
+        }}
       >
 
         <Text style={styles.title}>
@@ -201,9 +209,12 @@ AdminBookingsScreen({
         styles.content
       }
 
-      onTouchStart={
-        resetTimer
-      }
+      onStartShouldSetResponder={() => {
+
+        resetTimer();
+
+        return false;
+      }}
     >
 
       <Text style={styles.title}>
@@ -214,34 +225,52 @@ AdminBookingsScreen({
 
         <CustomButton
           title="Todas"
-          onPress={() =>
-            setFilter("all")
-          }
+          onPress={() => {
+
+            resetTimer();
+
+            setFilter("all");
+
+          }}
         />
 
         <CustomButton
           title="Pendientes"
-          onPress={() =>
-            setFilter("pending")
-          }
+          onPress={() => {
+
+            resetTimer();
+
+            setFilter(
+              "pending"
+            );
+
+          }}
         />
 
         <CustomButton
           title="Completadas"
-          onPress={() =>
+          onPress={() => {
+
+            resetTimer();
+
             setFilter(
               "completed"
-            )
-          }
+            );
+
+          }}
         />
 
         <CustomButton
           title="Canceladas"
-          onPress={() =>
+          onPress={() => {
+
+            resetTimer();
+
             setFilter(
               "cancelled"
-            )
-          }
+            );
+
+          }}
         />
 
       </View>

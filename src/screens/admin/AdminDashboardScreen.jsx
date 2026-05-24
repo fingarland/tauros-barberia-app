@@ -27,9 +27,13 @@ AdminDashboardScreen({
 
     <View
       style={styles.container}
-      onTouchStart={
-        resetTimer
-      }
+
+      onStartShouldSetResponder={() => {
+
+        resetTimer();
+
+        return false;
+      }}
     >
 
       <Text style={styles.title}>
@@ -38,38 +42,58 @@ AdminDashboardScreen({
 
       <CustomButton
         title="Reservas"
-        onPress={() =>
+
+        onPress={() => {
+
+          resetTimer();
+
           navigation.navigate(
             "AdminBookings"
-          )
-        }
+          );
+
+        }}
       />
 
       <CustomButton
         title="Barberos"
-        onPress={() =>
+
+        onPress={() => {
+
+          resetTimer();
+
           navigation.navigate(
             "AdminBarbers"
-          )
-        }
+          );
+
+        }}
       />
 
       <CustomButton
         title="Horarios"
-        onPress={() =>
+
+        onPress={() => {
+
+          resetTimer();
+
           navigation.navigate(
             "AdminSchedule"
-          )
-        }
+          );
+
+        }}
       />
 
       <CustomButton
         title="Volver al Inicio"
-        onPress={() =>
+
+        onPress={() => {
+
+          resetTimer();
+
           navigation.navigate(
             "Home"
-          )
-        }
+          );
+
+        }}
       />
 
     </View>

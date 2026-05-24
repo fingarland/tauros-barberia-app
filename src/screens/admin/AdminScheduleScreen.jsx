@@ -65,6 +65,8 @@ AdminScheduleScreen({
   const handleSave =
     async (barber) => {
 
+    resetTimer();
+
     // validar horas
     if (
       barber.start_hour < 6 ||
@@ -207,6 +209,8 @@ AdminScheduleScreen({
       value
     ) => {
 
+    resetTimer();
+
     const updated =
       barbers.map((barber) => {
 
@@ -235,9 +239,12 @@ AdminScheduleScreen({
         styles.content
       }
 
-      onTouchStart={
-        resetTimer
-      }
+      onStartShouldSetResponder={() => {
+
+        resetTimer();
+
+        return false;
+      }}
     >
 
       <Text style={styles.title}>
@@ -266,6 +273,7 @@ AdminScheduleScreen({
             value={String(
               barber.start_hour
             )}
+
             onChangeText={(
               text
             ) =>
@@ -287,6 +295,7 @@ AdminScheduleScreen({
             value={String(
               barber.end_hour
             )}
+
             onChangeText={(
               text
             ) =>

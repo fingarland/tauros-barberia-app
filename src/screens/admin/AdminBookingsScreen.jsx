@@ -30,8 +30,13 @@ AdminBookingsScreen({
     navigation
   );
 
-  const [appointments, setAppointments] =
-    useState([]);
+  const [appointments,
+    setAppointments] =
+      useState([]);
+
+  const [filter,
+    setFilter] =
+      useState("all");
 
   useEffect(() => {
     fetchAppointments();
@@ -110,6 +115,65 @@ AdminBookingsScreen({
     fetchAppointments();
   };
 
+  // FILTROS
+  const filteredAppointments =
+    appointments.filter(
+      (appt) => {
+
+        const status =
+          String(
+            appt.status || ""
+          ).toLowerCase();
+
+        // todas
+        if (
+          filter === "all"
+        ) {
+
+          return true;
+        }
+
+        // pendientes
+        if (
+          filter === "pending"
+        ) {
+
+          return (
+            status !==
+              "completed" &&
+            status !==
+              "cancelled"
+          );
+        }
+
+        // completadas
+        if (
+          filter ===
+          "completed"
+        ) {
+
+          return (
+            status ===
+            "completed"
+          );
+        }
+
+        // canceladas
+        if (
+          filter ===
+          "cancelled"
+        ) {
+
+          return (
+            status ===
+            "cancelled"
+          );
+        }
+
+        return true;
+      }
+    );
+
   if (
     appointments.length === 0
   ) {
@@ -146,27 +210,78 @@ AdminBookingsScreen({
         Reservas
       </Text>
 
-      {appointments.map((appt) => {
+      <View style={styles.filters}>
+
+        <CustomButton
+          title="Todas"
+          onPress={() =>
+            setFilter("all")
+          }
+        />
+
+        <CustomButton
+          title="Pendientes"
+          onPress={() =>
+            setFilter("pending")
+          }
+        />
+
+        <CustomButton
+          title="Completadas"
+          onPress={() =>
+            setFilter(
+              "completed"
+            )
+          }
+        />
+
+        <CustomButton
+          title="Canceladas"
+          onPress={() =>
+            setFilter(
+              "cancelled"
+            )
+          }
+        />
+
+      </View>
+
+      {filteredAppointments.map(
+        (appt) => {
+
+        const status =
+          String(
+            appt.status || ""
+          ).toLowerCase();
 
         let statusColor =
           "#C8962A";
 
+        let statusText =
+          "pending";
+
         if (
-          appt.status ===
+          status ===
           "completed"
         ) {
 
           statusColor =
             "#2ECC71";
+
+          statusText =
+            "completed";
         }
 
         if (
-          appt.status ===
+          status ===
           "cancelled"
         ) {
 
           statusColor =
             "#E74C3C";
+
+          statusText =
+            "cancelled";
         }
 
         return (
@@ -217,14 +332,10 @@ AdminBookingsScreen({
             >
               Estado:
               {" "}
-
-              {
-                appt.status ||
-                "pending"
-              }
+              {statusText}
             </Text>
 
-            {appt.status !==
+            {status !==
               "cancelled" && (
 
               <CustomButton
@@ -238,7 +349,7 @@ AdminBookingsScreen({
 
             )}
 
-            {appt.status !==
+            {status !==
               "completed" && (
 
               <CustomButton
@@ -280,6 +391,11 @@ const styles =
     color: "#C8962A",
     fontSize: 28,
     fontWeight: "bold",
+    marginBottom: 20,
+  },
+
+  filters: {
+    width: "100%",
     marginBottom: 20,
   },
 

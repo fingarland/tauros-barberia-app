@@ -1,4 +1,4 @@
-# BarberApp ✂️
+# BarberApp 
 
 Aplicación móvil desarrollada en React Native para la gestión de reservas de barbería.  
 Permite a los clientes reservar citas y al administrador gestionar barberos, horarios y reservas de forma segura y organizada.

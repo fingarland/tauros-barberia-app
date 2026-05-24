@@ -44,12 +44,15 @@ Permite a los clientes reservar citas y al administrador gestionar barberos, hor
 
 # Tecnologías Utilizadas
 
+# Tecnologías Utilizadas
+
 - React Native
 - Expo
 - JavaScript
+- Node.js
+- npm
 - Supabase
 - React Navigation
-
 ---
 
 # Estructura del Proyecto

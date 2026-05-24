@@ -78,6 +78,38 @@ AdminBarbersScreen() {
       return;
     }
 
+    // verificar silla repetida
+    const {
+      data: existingChair,
+      error: chairError,
+    } = await supabase
+      .from("barbers")
+      .select("*")
+      .eq(
+        "chair_number",
+        parseInt(chairNumber)
+      );
+
+    if (chairError) {
+
+      alert(
+        "Error verificando silla"
+      );
+
+      return;
+    }
+
+    if (
+      existingChair.length > 0
+    ) {
+
+      alert(
+        "Esa silla ya está asignada a otro barbero"
+      );
+
+      return;
+    }
+
     const { error } =
       await supabase
         .from("barbers")
@@ -118,6 +150,40 @@ AdminBarbersScreen() {
   const handleDeleteBarber =
     async (id) => {
 
+    // verificar reservas pendientes
+    const {
+      data: appointments,
+      error: appointmentsError,
+    } = await supabase
+      .from("appointments")
+      .select("*")
+      .eq("barber_id", id)
+      .or(
+        "status.eq.pending,status.is.null"
+      );
+
+    if (appointmentsError) {
+
+      alert(
+        "Error verificando reservas"
+      );
+
+      return;
+    }
+
+    // si tiene reservas pendientes
+    if (
+      appointments.length > 0
+    ) {
+
+      alert(
+        "No puedes eliminar este barbero porque tiene reservas pendientes"
+      );
+
+      return;
+    }
+
+    // eliminar barbero
     const { error } =
       await supabase
         .from("barbers")

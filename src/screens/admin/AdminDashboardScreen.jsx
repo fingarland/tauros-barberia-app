@@ -49,7 +49,7 @@ AdminDashboardScreen({
       />
 
       <CustomButton
-        title="Cerrar Sesión"
+        title="Volver al Inicio"
         onPress={() =>
           navigation.navigate(
             "Home"

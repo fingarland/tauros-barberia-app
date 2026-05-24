@@ -34,6 +34,14 @@ TimeSlotScreen({
     setSelectedDate] =
       useState(new Date());
 
+  const formatHour =
+    (hour) => {
+
+    return hour
+      .toString()
+      .padStart(2, "0");
+  };
+
   const generateTimeSlots =
     () => {
 
@@ -50,11 +58,11 @@ TimeSlotScreen({
     ) {
 
       slots.push(
-        `${hour}:00`
+        `${formatHour(hour)}:00`
       );
 
       slots.push(
-        `${hour}:30`
+        `${formatHour(hour)}:30`
       );
     }
 
@@ -240,6 +248,16 @@ TimeSlotScreen({
         Horarios disponibles
       </Text>
 
+      {availableSlots.length === 0 && (
+
+        <Text
+          style={styles.noSlots}
+        >
+          No hay horarios disponibles
+        </Text>
+
+      )}
+
       {availableSlots.map(
         (time) => (
 
@@ -288,6 +306,12 @@ const styles =
     marginTop: 20,
     marginBottom: 15,
     textAlign: "center",
+  },
+
+  noSlots: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    marginTop: 20,
   },
 
   daysContainer: {

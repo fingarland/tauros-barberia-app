@@ -67,24 +67,24 @@ AdminScheduleScreen({
 
     // validar horas
     if (
-      barber.start_hour < 0 ||
-      barber.start_hour > 23
+      barber.start_hour < 6 ||
+      barber.start_hour > 20
     ) {
 
       alert(
-        "La hora inicio debe ser entre 0 y 23"
+        "La hora inicio debe ser entre 6 y 20"
       );
 
       return;
     }
 
     if (
-      barber.end_hour < 0 ||
-      barber.end_hour > 23
+      barber.end_hour < 6 ||
+      barber.end_hour > 20
     ) {
 
       alert(
-        "La hora fin debe ser entre 0 y 23"
+        "La hora fin debe ser entre 6 y 20"
       );
 
       return;
@@ -102,6 +102,78 @@ AdminScheduleScreen({
       return;
     }
 
+    // obtener reservas activas
+    const {
+      data: appointments,
+      error: appointmentsError,
+    } = await supabase
+      .from("appointments")
+      .select("*")
+      .eq("barber_id", barber.id)
+      .neq("status", "completed")
+      .neq("status", "cancelled");
+
+    if (appointmentsError) {
+
+      alert(
+        "Error verificando reservas"
+      );
+
+      return;
+    }
+
+    // verificar reservas fuera del rango
+    const invalidAppointments =
+      appointments.filter(
+        (appt) => {
+
+          const time =
+            appt.appointment_time;
+
+          let hour =
+            parseInt(
+              time.split(":")[0]
+            );
+
+          // soporte reservas viejas AM/PM
+          if (
+            time.includes("PM") &&
+            hour !== 12
+          ) {
+
+            hour += 12;
+          }
+
+          if (
+            time.includes("AM") &&
+            hour === 12
+          ) {
+
+            hour = 0;
+          }
+
+          return (
+            hour <
+              barber.start_hour ||
+            hour >=
+              barber.end_hour
+          );
+        }
+      );
+
+    // bloquear cambio
+    if (
+      invalidAppointments.length > 0
+    ) {
+
+      alert(
+        "No puedes cambiar el horario porque existen citas pendientes fuera del nuevo rango"
+      );
+
+      return;
+    }
+
+    // guardar horarios
     const { error } =
       await supabase
         .from("barbers")

@@ -80,9 +80,11 @@ AdminBookingsScreen({
         .update({
           status: "cancelled",
         })
-        .eq("id", id);
+        .eq("id", Number(id));
 
     if (error) {
+
+      console.log(error);
 
       alert(
         "Error al cancelar la reserva"
@@ -105,9 +107,11 @@ AdminBookingsScreen({
         .update({
           status: "completed",
         })
-        .eq("id", id);
+        .eq("id", Number(id));
 
     if (error) {
+
+      console.log(error);
 
       alert(
         "Error completando reserva"
@@ -115,6 +119,47 @@ AdminBookingsScreen({
 
       return;
     }
+
+    fetchAppointments();
+  };
+
+  // ELIMINAR RESERVA
+  const handleDeleteAppointment =
+    async (id) => {
+
+    resetTimer();
+
+    console.log(
+      "Eliminando reserva:",
+      id
+    );
+
+    const { error } =
+      await supabase
+        .from("appointments")
+        .delete()
+        .eq(
+          "id",
+          Number(id)
+        );
+
+    if (error) {
+
+      console.log(
+        "Error eliminando:",
+        error
+      );
+
+      alert(
+        "Error eliminando reserva"
+      );
+
+      return;
+    }
+
+    alert(
+      "Reserva eliminada"
+    );
 
     fetchAppointments();
   };
@@ -385,6 +430,23 @@ AdminBookingsScreen({
                 title="Marcar Completada"
                 onPress={() =>
                   handleComplete(
+                    appt.id
+                  )
+                }
+              />
+
+            )}
+
+            {(status ===
+              "completed" ||
+              status ===
+              "cancelled") && (
+
+              <CustomButton
+                title="Eliminar Reserva"
+
+                onPress={() =>
+                  handleDeleteAppointment(
                     appt.id
                   )
                 }

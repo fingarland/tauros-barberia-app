@@ -35,6 +35,11 @@ BookingScreen({
   const [phone, setPhone] =
     useState("");
 
+  const [
+    phoneType,
+    setPhoneType,
+  ] = useState("mobile");
+
   const formattedDate =
     appointmentDate ||
     "Sin fecha";
@@ -69,13 +74,29 @@ BookingScreen({
       return;
     }
 
-    // validar teléfono
+    // validar celular
     if (
+      phoneType ===
+        "mobile" &&
       phone.length !== 10
     ) {
 
       alert(
-        "El teléfono debe tener 10 dígitos"
+        "El celular debe tener 10 dígitos"
+      );
+
+      return;
+    }
+
+    // validar fijo
+    if (
+      phoneType ===
+        "fixed" &&
+      phone.length < 7
+    ) {
+
+      alert(
+        "El teléfono fijo debe tener mínimo 7 dígitos"
       );
 
       return;
@@ -91,6 +112,9 @@ BookingScreen({
               customerName,
 
             phone: phone,
+
+            phone_type:
+              phoneType,
 
             barber_id:
               barber.id,
@@ -120,12 +144,10 @@ BookingScreen({
       return;
     }
 
-    // mostrar mensaje
     alert(
       "Reserva realizada correctamente"
     );
 
-    // volver al inicio automáticamente
     setTimeout(() => {
 
       navigation.navigate(
@@ -186,11 +208,45 @@ BookingScreen({
         }}
       />
 
+      <Text style={styles.typeTitle}>
+        Tipo de teléfono
+      </Text>
+
+      <View style={styles.typeContainer}>
+
+        <CustomButton
+          title="Móvil"
+          onPress={() =>
+            setPhoneType(
+              "mobile"
+            )
+          }
+        />
+
+        <CustomButton
+          title="Fijo"
+          onPress={() =>
+            setPhoneType(
+              "fixed"
+            )
+          }
+        />
+
+      </View>
+
       <TextInput
         style={styles.input}
-        placeholder="Teléfono"
+        placeholder={
+          phoneType ===
+          "mobile"
+            ? "Celular"
+            : "Teléfono fijo"
+        }
+
         placeholderTextColor="#999"
+
         keyboardType="phone-pad"
+
         value={phone}
 
         onChangeText={(text) => {
@@ -255,6 +311,18 @@ const styles =
     marginTop: 5,
   },
 
+  typeTitle: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    marginTop: 20,
+    marginBottom: 10,
+  },
+
+  typeContainer: {
+    width: "100%",
+    marginBottom: 10,
+  },
+
   input: {
     width: "100%",
 
@@ -267,7 +335,7 @@ const styles =
 
     borderRadius: 10,
 
-    marginTop: 20,
+    marginTop: 15,
 
     fontSize: 16,
   },

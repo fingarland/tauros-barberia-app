@@ -1,6 +1,7 @@
 import {
   useEffect,
   useRef,
+  useCallback,
 } from "react";
 
 const INACTIVITY_TIME =
@@ -14,30 +15,35 @@ useAdminTimeout(
   const timerRef =
     useRef(null);
 
-  const resetTimer = () => {
+  const resetTimer =
+    useCallback(() => {
 
-    if (timerRef.current) {
-
-      clearTimeout(
+      // limpiar timer anterior
+      if (
         timerRef.current
-      );
+      ) {
 
-    }
-
-    timerRef.current =
-      setTimeout(() => {
-
-        alert(
-          "Sesión cerrada por inactividad"
+        clearTimeout(
+          timerRef.current
         );
 
-        navigation.replace(
-          "AdminLogin"
-        );
+      }
 
-      }, INACTIVITY_TIME);
+      // crear nuevo timer
+      timerRef.current =
+        setTimeout(() => {
 
-  };
+          alert(
+            "Sesión cerrada por inactividad"
+          );
+
+          navigation.replace(
+            "AdminLogin"
+          );
+
+        }, INACTIVITY_TIME);
+
+    }, [navigation]);
 
   useEffect(() => {
 
@@ -45,7 +51,9 @@ useAdminTimeout(
 
     return () => {
 
-      if (timerRef.current) {
+      if (
+        timerRef.current
+      ) {
 
         clearTimeout(
           timerRef.current
@@ -55,7 +63,7 @@ useAdminTimeout(
 
     };
 
-  }, []);
+  }, [resetTimer]);
 
   return {
     resetTimer,
